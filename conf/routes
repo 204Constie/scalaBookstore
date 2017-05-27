@@ -3,23 +3,31 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
+GET     /                               controllers.Application.index
 
 #product
-GET     /books                      controllers.Product.productsGet
-GET     /books/:productId           controllers.Product.productGet(productId: Int)
-POST    /books/:productId           controllers.Product.productPost(productId: Int)
-DELETE  /books/:productId           controllers.Product.productDelete(productId: Int)
+GET     /products                       @controllers.Product.productsGet
+POST    /products                       @controllers.Product.productsPost
+GET     /product/:productId             @controllers.Product.productGet(productId: Int)
+POST    /product/delete/:productId      @controllers.Product.productDelete(productId: Int)
 
 #shopping cart
-GET     /cartitems                  controllers.CartItems.cartItemsGet
-GET     /cartitems/:cartItemId      controllers.CartItems.cartItemGet(cartItemId: Int)
-POST    /cartitems/:cartItemId      controllers.CartItems.cartItemPost(cartItemId: Int)
-DELETE  /cartitems/:cartItemId      controllers.CartItems.cartItemDelete(cartItemId: Int)
+GET     /cartitems                      @controllers.CartItems.cartitemsGet
+POST    /cartitems                      @controllers.CartItems.cartitemsPost
+GET     /cartitem/:cartItemId           @controllers.CartItems.cartitemGet(cartItemId: Int)
+POST    /cartitem/delete/:cartItemId    @controllers.CartItems.cartitemDelete(cartItemId: Int)
 
 #order
-POST    /order                      controllers.Order.postOrder
-DELETE  /order/:orderId             controllers.Order.deleteOrder(orderId: Int)
+GET     /orders                         @controllers.Order.ordersGet
+POST    /orders                         @controllers.Order.ordersPost
+GET     /order/:orderId                 @controllers.Order.orderGet(orderId: Int)
+POST    /order/delete/:orderId          @controllers.Order.orderDelete(orderId: Int)
+
+#category
+GET     /categories                     @controllers.Category.categoriesGet
+POST    /categories                     @controllers.Category.categoriesPost
+GET     /category/:categoryId           @controllers.Category.categoryGet(categoryId: Int)
+POST    /ocategory/delete/:categoryId   @controllers.Category.categoryDelete(categoryId: Int)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

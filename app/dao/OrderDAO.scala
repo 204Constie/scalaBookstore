@@ -6,9 +6,9 @@ package dao
 
 import javax.inject.Inject
 
-import scala.concurrent.Future
+import scala.concurrent.{Future, ExecutionContext}
 
-import models.Order
+import models.{Order, OrderREST}
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.driver.JdbcProfile
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -19,18 +19,27 @@ class OrderDAO @Inject() (protected val dbConfigProvider: DatabaseConfigProvider
 
   private val Orders = TableQuery[OrdersTable]
 
-  def all(): Future[Seq[Order]] = db.run(Orders.result)
+  def all(implicit ec: ExecutionContext): Future[Seq[OrderREST]] = {
+    val query = Orders
+    val results = query.result
+    val futureCartItems = db.run(results)
+    futureCartItems.map(
+      _.map {
+        z => OrderREST(totalAmount = z.totalAmount)
+      }.toList
+    )
+  }
 
   def insert(order: Order): Future[Unit] = db.run(Orders += order).map { _ => () }
 
   def delete(id: Int): Future[Unit] = db.run(Orders.filter(_.id === id).delete).map ( _ => () )
 
-  private class OrdersTable(tag: Tag) extends Table[Order](tag, "Order"){
-    def id = column[Int]("ID")
+  private class OrdersTable(tag: Tag) extends Table[Order](tag, "TOrders"){
+    def id = column[Int]("ID",O.AutoInc, O.AutoInc)
 
-    def cartId = column[Int]("CART_ID")
+    def totalAmount = column[Int]("TOTALAMOUNT")
 
-    def * = (id, cartId) <> (Order.tupled, Order.unapply _)
+    def * = (id, totalAmount) <> ((models.Order.apply _).tupled, models.Order.unapply _)
   }
 }
 
