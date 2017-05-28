@@ -35,7 +35,7 @@ class Product @Inject() (productsDAO: ProductsDAO) extends Controller {
 
   def productDelete(id: Int) = Action { implicit request =>
     productsDAO.delete(id)
-    Ok(Json.toJson("{success: true}"))
+    Ok(Json.toJson("success"))
   }
 
 }

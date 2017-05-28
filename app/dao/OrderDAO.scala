@@ -22,11 +22,22 @@ class OrderDAO @Inject() (protected val dbConfigProvider: DatabaseConfigProvider
   def all(implicit ec: ExecutionContext): Future[Seq[OrderREST]] = {
     val query = Orders
     val results = query.result
-    val futureCartItems = db.run(results)
-    futureCartItems.map(
+    val futureOrders = db.run(results)
+    futureOrders.map(
       _.map {
         z => OrderREST(totalAmount = z.totalAmount)
       }.toList
+    )
+  }
+
+  def getOrderById(id: Int): Future[Order] = {
+    val query = Orders
+    val result = query.filter(_.id === id).result.headOption
+    val futureOrder = db.run(result)
+    futureOrder.map(
+      _.map {
+        z => Order(id = z.id, totalAmount = z.totalAmount)
+      }.toList.head
     )
   }
 

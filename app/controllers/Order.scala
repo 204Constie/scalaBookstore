@@ -24,11 +24,18 @@ class Order @Inject() (orderDAO: OrderDAO) extends Controller {
     val json:OrderREST = request.body.asJson.get.as[OrderREST]
     val cater = Order(id = 0, totalAmount = json.totalAmount)
     orderDAO.insert(cater)
-    Ok(Json.toJson("{success: true}"))
+    Ok(Json.toJson("success"))
   }
 
-  def orderGet(id: Int) = TODO
+  def orderGet(id: Int) = Action.async { implicit request =>
+    orderDAO.getOrderById(id).map {
+      order => Ok(Json.toJson(order))
+    }
+  }
 
-  def orderDelete(id: Int) = TODO
+  def orderDelete(id: Int) = Action { implicit request =>
+    orderDAO.delete(id)
+    Ok(Json.toJson("success"))
+  }
 
 }

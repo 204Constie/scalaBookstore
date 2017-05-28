@@ -14,7 +14,7 @@ import slick.driver.JdbcProfile
 import scala.concurrent.ExecutionContext.Implicits.global
 
 
-class CartItemDAO @Inject() (protected val dbConfigProvider: DatabaseConfigProvider) extends HasDatabaseConfigProvider[JdbcProfile] {
+class CartItemsDAO @Inject() (protected val dbConfigProvider: DatabaseConfigProvider) extends HasDatabaseConfigProvider[JdbcProfile] {
 
   import driver.api._
 
@@ -28,6 +28,17 @@ class CartItemDAO @Inject() (protected val dbConfigProvider: DatabaseConfigProvi
       _.map {
         z => CartItemREST(orderId = z.orderId, productId = z.productId, amount = z.amount)
       }.toList
+    )
+  }
+
+  def getCartItemById(id: Int): Future[CartItem] = {
+    val query = CartItems
+    val result = query.filter(_.id === id).result.headOption
+    val futureCartItem = db.run(result)
+    futureCartItem.map(
+      _.map {
+        z => CartItem(id = z.id, orderId = z.orderId, productId = z.productId, amount = z.amount)
+      }.toList.head
     )
   }
 

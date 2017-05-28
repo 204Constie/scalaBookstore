@@ -27,8 +27,15 @@ class Category @Inject() (categoryDAO: CategoryDAO) extends Controller {
     Ok(json.name)
   }
 
-  def categoryGet(id: Int) = TODO
+  def categoryGet(id: Int) = Action.async { implicit request =>
+    categoryDAO.getCategoryById(id) map {
+      category => Ok(Json.toJson(category))
+    }
+  }
 
-  def categoryDelete(id: Int) = TODO
+  def categoryDelete(id: Int) = Action { implicit request =>
+    categoryDAO.delete(id)
+    Ok(Json.toJson("success"))
+  }
 
 }

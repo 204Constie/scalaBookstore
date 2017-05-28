@@ -30,6 +30,17 @@ class CategoryDAO @Inject() (protected val dbConfigProvider: DatabaseConfigProvi
     )
   }
 
+  def getCategoryById(id: Int): Future[Category] = {
+    val query = Categories
+    val result = query.filter(_.id === id).result.headOption
+    val futureCategory = db.run(result)
+    futureCategory.map(
+      _.map {
+        z => Category(id = z.id, name = z.name)
+      }.toList.head
+    )
+  }
+
   def insert(category: Category): Future[Unit] = db.run(Categories += category).map { _ => () }
 
   def delete(id: Int): Future[Unit] = db.run(Categories.filter(_.id === id).delete).map(_ => ())
