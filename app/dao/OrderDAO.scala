@@ -41,7 +41,20 @@ class OrderDAO @Inject() (protected val dbConfigProvider: DatabaseConfigProvider
     )
   }
 
-  def insert(order: Order): Future[Unit] = db.run(Orders += order).map { _ => () }
+//  val insertQuery = Orders returning Orders.map(_.id)
+
+  def insert(order: Order) : Future[Order] = {
+    val action = (Orders returning Orders.map(_.id) into ((order, id) => order.copy(id = id))) += order
+    val futureid = db.run(action)
+    futureid.map(
+//      _.map {
+        z => Order(id = z.id, totalAmount = z.totalAmount)
+//      }.toList
+    )
+  }
+
+
+  //def insert(order: Order): Future[Unit] = db.run(Orders += order).map { _ => () }
 
   def delete(id: Int): Future[Unit] = db.run(Orders.filter(_.id === id).delete).map ( _ => () )
 

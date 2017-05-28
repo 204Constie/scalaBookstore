@@ -20,12 +20,21 @@ class Order @Inject() (orderDAO: OrderDAO) extends Controller {
     }
   }
 
-  def ordersPost = Action { implicit request =>
+  def ordersPost = Action.async { implicit request =>
     val json:OrderREST = request.body.asJson.get.as[OrderREST]
     val cater = Order(id = 0, totalAmount = json.totalAmount)
-    orderDAO.insert(cater)
-    Ok(Json.toJson("success"))
+    orderDAO.insert(cater) map {
+      order => Ok(Json.toJson(order))
+    }
+//    Ok(Json.toJson("success"))
   }
+//
+//  def ordersPost = Action { implicit request =>
+//    val json:OrderREST = request.body.asJson.get.as[OrderREST]
+//    val cater = Order(id = 0, totalAmount = json.totalAmount)
+//    orderDAO.insert(cater)
+//    Ok(Json.toJson("success"))
+//  }
 
   def orderGet(id: Int) = Action.async { implicit request =>
     orderDAO.getOrderById(id).map {
