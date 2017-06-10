@@ -20,7 +20,7 @@ object CartItem {
   implicit val CartItemFormat = Json.format[CartItem]
 }
 
-case class Order(id: Int, totalAmount: Int)
+case class Order(id: Int, totalAmount: Int, shipment: String, payment: String)
 object Order {
   implicit val OrderFormat = Json.format[Order]
 }
@@ -41,7 +41,7 @@ object CartItemREST {
   implicit val CartItemFormat = Json.format[CartItemREST]
 }
 
-case class OrderREST(totalAmount: Int)
+case class OrderREST(totalAmount: Int, shipment: String, payment: String)
 object OrderREST {
   implicit val OrderFormat = Json.format[OrderREST]
 }

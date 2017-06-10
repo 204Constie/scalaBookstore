@@ -20,6 +20,8 @@ POST    /cartitem/delete/:cartItemId    @controllers.CartItems.cartitemDelete(ca
 #order
 GET     /orders                         @controllers.Order.ordersGet
 POST    /orders                         @controllers.Order.ordersPost
+POST    /orders/update                  @controllers.Order.orderUpdate
+#POST    /order/:orderId                 @controllers.Order.orderUpdate(orderId: Int)
 GET     /order/:orderId                 @controllers.Order.orderGet(orderId: Int)
 POST    /order/delete/:orderId          @controllers.Order.orderDelete(orderId: Int)
 
